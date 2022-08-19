@@ -8,31 +8,30 @@ import 'package:tchat/pages/contacts_page.dart';
 import 'package:tchat/pages/messages_page.dart';
 import 'package:tchat/pages/notifications_page.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomeScreen extends StatelessWidget {
+  HomeScreen({Key? key}) : super(key: key);
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  final ValueNotifier<int> pageIndex = ValueNotifier(0);
 
-class _HomeScreenState extends State<HomeScreen> {
   final pages = const [
     MessagesPage(),
     NotificationPage(),
     CallPage(),
     ContactPage(),
   ];
-  var index =0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[index],
+      body: ValueListenableBuilder(
+        valueListenable: pageIndex,
+        builder: (BuildContext context, int value, _){
+          return pages[pageIndex.value];
+        },
+      ),
       bottomNavigationBar: _BottomNavigationBar(
-        onItemSelected: (i){
-          setState(() {
-            index = i;
-          });
+        onItemSelected: (index){
+          pageIndex.value = index;
         },
       ),
     );
